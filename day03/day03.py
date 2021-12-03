@@ -1,7 +1,7 @@
 from typing import Callable
 
 
-def find_most_common(data: list[str], index: int) -> str:
+def get_most_common(data: list[str], index: int) -> str:
     bit_list = [x[index] for x in data]
     res = bit_list[0]
     counter = bit_list.count(res)
@@ -15,7 +15,7 @@ def find_most_common(data: list[str], index: int) -> str:
     return counter, res
 
 
-def find_least_common(data: list[str], index: int) -> str:
+def get_least_common(data: list[str], index: int) -> str:
     bit_list = [x[index] for x in data]
     res = bit_list[0]
     counter = bit_list.count(res)
@@ -63,8 +63,8 @@ def get_life_rating(data: str, filter_func: Callable[[str, int, tuple[int, str],
     n = len(word_list[0])
 
     for index in range(n):
-        most_common = find_most_common(word_list, index)
-        least_common = find_least_common(word_list, index)
+        most_common = get_most_common(word_list, index)
+        least_common = get_least_common(word_list, index)
 
         word_list = [word for word in word_list if filter_func(
             word, index, most_common, least_common)]
@@ -79,9 +79,9 @@ def main():
     INPUT_TEXT = open("input.txt").read()
 
     gamma_rate_bin, gamma_rate = get_power_consumption(
-        INPUT_TEXT, find_most_common)
+        INPUT_TEXT, get_most_common)
     epsilon_rate_bin, epsilon_rate = get_power_consumption(
-        INPUT_TEXT, find_least_common)
+        INPUT_TEXT, get_least_common)
 
     oxygen_rate_bin, oxygen_rate = get_life_rating(INPUT_TEXT, oxygen_filter)
     co2_rate_bin, co2_rate = get_life_rating(INPUT_TEXT, oxygen_filter)
