@@ -1,93 +1,57 @@
-from typing import Callable
+from typing import Callable, Type
 
 
-def get_most_common(data: list[str], index: int) -> str:
-    bit_list = [x[index] for x in data]
-    res = bit_list[0]
-    counter = bit_list.count(res)
+def get_power_consumption(data: str):
+    gamma_rate = ""
+    epsilon_rate = ""
 
-    for i in bit_list:
-        freq = bit_list.count(i)
-        if freq > counter:
-            counter = freq
-            res = i
-
-    return counter, res
-
-
-def get_least_common(data: list[str], index: int) -> str:
-    bit_list = [x[index] for x in data]
-    res = bit_list[0]
-    counter = bit_list.count(res)
-
-    for i in bit_list:
-        freq = bit_list.count(i)
-        if freq < counter:
-            counter = freq
-            res = i
-
-    return counter, res
-
-
-def get_power_consumption(data: str, build_func: Callable[[list[str], int], tuple[int, str]]):
-    res = ""
-    tab = data.splitlines()
-    length = len(tab[0])
-
-    for i in range(length):
-        res += build_func(tab, i)[1]
-
-    return res, int(res, 2)
-
-
-def oxygen_filter(word: str, index: int, most_common: tuple[int, str], least_common: tuple[int, str]):
-    most_common_count, most_common_bit = most_common
-    least_common_count, least_common_bit = least_common
-
-    if most_common_count == least_common_count:
-        return word[index] == "1"
-    return word[index] == most_common_bit
-
-
-def co2_filter(word: str, index: int, most_common: tuple[int, str], least_common: tuple[int, str]):
-    most_common_count, most_common_bit = most_common
-    least_common_count, least_common_bit = least_common
-
-    if most_common_count == least_common_count:
-        return word[index] == "0"
-    return word[index] == least_common_bit
-
-
-def get_life_rating(data: str, filter_func: Callable[[str, int, tuple[int, str], tuple[int, str]], bool]):
     word_list = data.splitlines()
-    n = len(word_list[0])
+    length = len(word_list[0])
 
-    for index in range(n):
-        most_common = get_most_common(word_list, index)
-        least_common = get_least_common(word_list, index)
+    for index in range(length):
+        bit_list = [word[index] for word in word_list]
 
-        word_list = [word for word in word_list if filter_func(
-            word, index, most_common, least_common)]
+        gamma_rate += max(set(bit_list), key=bit_list.count)
+        epsilon_rate += min(set(bit_list), key=bit_list.count)
 
-        if len(word_list) <= 1:
+    return (gamma_rate, epsilon_rate, int(gamma_rate, 2) * int(epsilon_rate, 2))
+
+
+def filter_words(word_list: list[str], cmp_func: Type[max] | Type[min], equal_char: str) -> str:
+    length = len(word_list[0])
+    res = word_list.copy()
+
+    for index in range(length):
+        bit_list = [word[index] for word in res]
+        filter_char = cmp_func(set(bit_list), key=bit_list.count)
+
+        if bit_list.count(filter_char) == len(bit_list)/2:
+            res = [word for word in res if word[index] == equal_char]
+        else:
+            res = [word for word in res if word[index] == filter_char]
+        if len(res) <= 1:
             break
 
-    return word_list[0], int(word_list[0], 2)
+    return res[0]
+
+
+def get_life_rating(data: str):
+    oxygen_rating = filter_words(data.splitlines(), max, "1")
+    co2_rating = filter_words(data.splitlines(), min, "0")
+
+    return (oxygen_rating, co2_rating, int(oxygen_rating, 2)*int(co2_rating, 2))
 
 
 def main():
     INPUT_TEXT = open("input.txt").read()
 
-    gamma_rate_bin, gamma_rate = get_power_consumption(
-        INPUT_TEXT, get_most_common)
-    epsilon_rate_bin, epsilon_rate = get_power_consumption(
-        INPUT_TEXT, get_least_common)
+    gamma_rate, epsilon_rate, power_consumption = get_power_consumption(
+        INPUT_TEXT)
 
-    oxygen_rate_bin, oxygen_rate = get_life_rating(INPUT_TEXT, oxygen_filter)
-    co2_rate_bin, co2_rate = get_life_rating(INPUT_TEXT, oxygen_filter)
+    oxygen_rate, co2_rate, life_rating = get_life_rating(INPUT_TEXT)
 
-    print("Part1:", gamma_rate_bin, epsilon_rate_bin, gamma_rate * epsilon_rate)
-    print("Part2:", oxygen_rate_bin, co2_rate_bin, oxygen_rate * co2_rate)
+    print("Part1:", gamma_rate, epsilon_rate, power_consumption)
+    print("Part2:", oxygen_rate, co2_rate, life_rating)
 
 
 if __name__ == "__main__":
