@@ -1,7 +1,7 @@
-from typing import Callable, Type
+from typing import Type
 
 
-def get_power_consumption(data: str):
+def get_power_consumption(data: str) -> tuple[str, str, int]:
     """
     Computes the power consumption
 
@@ -51,7 +51,7 @@ def filter_words(data: str, cmp_func: Type[max] | Type[min], equal_char: str) ->
     return word_list[0]
 
 
-def get_life_support_rating(data: str):
+def get_life_support_rating(data: str) -> tuple[str, str, int]:
     """
     Computes the life support rating
 
