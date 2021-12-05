@@ -44,13 +44,7 @@ def get_final_position(
     aim = initial_aim
 
     for (instruction, step) in commands:
-        match instruction:
-            case Directions.FORWARD:
-                x, y, aim = instruction_set["forward"](x, y, aim, step)
-            case Directions.UP:
-                x, y, aim = instruction_set["up"](x, y, aim, step)
-            case Directions.DOWN:
-                x, y, aim = instruction_set["down"](x, y, aim, step)
+        x, y, aim = instruction_set[instruction](x, y, aim, step)
 
     return x, y
 
@@ -60,14 +54,14 @@ def main():
     commands = get_commands(INPUT_TEXT)
 
     part1_instructions = {
-        "forward": lambda x, y, aim, step: (x+step, y, aim),
-        "up": lambda x, y, aim, step: (x, y-step, aim),
-        "down": lambda x, y, aim, step: (x, y+step, aim)
+        Directions.FORWARD: lambda x, y, aim, step: (x+step, y, aim),
+        Directions.UP: lambda x, y, aim, step: (x, y-step, aim),
+        Directions.DOWN: lambda x, y, aim, step: (x, y+step, aim)
     }
     part2_instructions = {
-        "forward": lambda x, y, aim, step: (x+step, y+aim*step, aim),
-        "up": lambda x, y, aim, step: (x, y, aim-step),
-        "down": lambda x, y, aim, step: (x, y, aim+step)
+        Directions.FORWARD: lambda x, y, aim, step: (x+step, y+aim*step, aim),
+        Directions.UP: lambda x, y, aim, step: (x, y, aim-step),
+        Directions.DOWN: lambda x, y, aim, step: (x, y, aim+step)
     }
 
     x1, y1 = get_final_position(commands, part1_instructions)
