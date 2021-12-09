@@ -1,4 +1,12 @@
 def get_adjacent(pos: tuple[int], min_pos: tuple[int], max_pos: tuple[int]) -> list[tuple]:
+    """
+    Computes a point's adjacent positions
+
+    :param pos: The point's X and Y coordinates
+    :param min_pos: The minimum X and Y coordinates
+    :param max_pos: The maximum X and Y coordinates
+    :return: The point's adjacent positions
+    """
     x, y = pos
     x_min, y_min = min_pos
     x_max, y_max = max_pos
@@ -14,6 +22,12 @@ def get_adjacent(pos: tuple[int], min_pos: tuple[int], max_pos: tuple[int]) -> l
 
 
 def get_low_points(points: list[list[int]]):
+    """
+    Extracts low points from the input according to problem description
+
+    :param points: The list of points
+    :return: The low points
+    """
     low_points = []
 
     for y in range(len(points)):
@@ -31,6 +45,14 @@ def get_low_points(points: list[list[int]]):
 
 
 def get_basin(points: list[list[int]], current_point: tuple[int, int], basin: list[tuple[int, int]] = []):
+    """
+    Computes a low point's basin according to problem description using recursion
+
+    :param points: The list of points
+    :param current_points: The current point
+    :param basin: The basin
+    :return: The low point's basin
+    """
     x, y = current_point
     value = points[y][x]
     adjacent_points = get_adjacent(
