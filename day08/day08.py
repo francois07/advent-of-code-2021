@@ -1,7 +1,13 @@
 from enum import Enum
 
 
-def count_unique(data: str):
+def count_unique(data: str) -> int:
+    """
+    Counts the number of unique digits in the input
+
+    :param str data: The input
+    :return: The number of unique digits
+    """
     count = 0
 
     for line in data.splitlines():
