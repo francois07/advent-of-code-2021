@@ -54,7 +54,6 @@ def get_basin(points: list[list[int]], current_point: tuple[int, int], basin: li
     :return: The low point's basin
     """
     x, y = current_point
-    value = points[y][x]
     adjacent_points = get_adjacent(
         (x, y), (0, 0), (len(points[0]), len(points)))
 
